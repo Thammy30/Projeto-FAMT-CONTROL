@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="famt_control.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1245"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Usuarios" custom_title="0" dock_id="1" table="4,8:mainUsuarios"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000012400ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">-- =============================================================================
+-- SQUAD FAMT - CONTROLE DE PRIMEIRO ACESSO VIA SQL
+-- Engenheira de Banco de Dados: Thamirys Matos da Silva
+-- =============================================================================
+
+-- 1. LIMPEZA DO AMBIENTE (Para rodar o teste do zero)
+DROP TABLE IF EXISTS Transacoes;
+DROP TABLE IF EXISTS Usuarios;
+
+-- 2. CRIAÇÃO DA TABELA DE USUÁRIOS ATUALIZADA
+-- Adicionamos 'primeiro_acesso'. Por padrão, todo usuário novo começa com 1 (Sim).
+CREATE TABLE Usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    senha_hash TEXT NOT NULL,
+    primeiro_acesso INTEGER DEFAULT 1 -- 1 = Precisa trocar | 0 = Senha definitiva
+);
+
+-- 3. CADASTRANDO UM USUÁRIO COM SENHA PROVISÓRIA
+-- Ao cadastrar, não informamos o 'primeiro_acesso' para ele assumir o valor 1 automaticamente.
+INSERT INTO Usuarios (email, senha_hash) 
+VALUES ('thamirys@famt.com', 'famt123');
+
+
+-- =============================================================================
+-- SIMULAÇÃO DE COMO O SISTEMA CONSULTA E REDEFINE A SENHA
+-- =============================================================================
+
+-- PASSO A: O sistema verifica se o usuário precisa redefinir a senha no login
+-- Se o resultado da coluna 'primeiro_acesso' for 1, o sistema bloqueia e exige a troca.
+SELECT email, primeiro_acesso FROM Usuarios WHERE email = 'thamirys@famt.com';
+
+
+-- PASSO B: Comando executado quando o usuário digita a nova senha definitiva
+-- Aqui atualizamos a senha e mudamos o 'primeiro_acesso' para 0.
+UPDATE Usuarios 
+SET senha_hash = 'MinhaSenhaSegura999', 
+    primeiro_acesso = 0 
+WHERE email = 'thamirys@famt.com';
+
+
+-- PASSO C: Verificação final
+-- Rode este SELECT final para ver que a senha mudou e o status agora é 0 (Acesso Liberado!)
+SELECT * FROM Usuarios;</sql><current_tab id="0"/></tab_sql></sqlb_project>
