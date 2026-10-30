@@ -178,6 +178,20 @@ As transações possuem relacionamento com os usuários por meio da chave estran
 
 ---
 
+## ☁️ Implantação Experimental no Streamlit Community Cloud
+
+Durante o desenvolvimento do projeto, o FAMT CONTROL foi publicado no **Streamlit Community Cloud** para testes de implantação e funcionamento da aplicação em ambiente web.
+
+Nessa primeira versão, o sistema utilizava o SQLite, que armazenava as informações em um arquivo local (`famt_control.db`), dentro do ambiente da aplicação.
+
+Durante os testes, foi identificada uma limitação relacionada à persistência dos dados nesse ambiente. Após períodos de inatividade, a aplicação poderia entrar em repouso e, ao ser inicializada novamente, o ambiente poderia ser reiniciado. Como consequência, os dados armazenados localmente não tinham garantia de permanência, podendo ser perdidos ou precisar ser recriados.
+
+Essa experiência permitiu identificar a necessidade de utilizar uma solução de banco de dados externo, que oferecesse maior persistência e independência em relação aos ciclos de inicialização da aplicação.
+
+Essa necessidade foi considerada na etapa seguinte do projeto, motivando a migração do SQLite para o MySQL durante a transição do projeto.
+
+---
+
 ## 🔐 Segurança e Proteção de Dados
 
 O FAMT CONTROL possui mecanismos básicos de segurança para proteger as informações dos usuários:
